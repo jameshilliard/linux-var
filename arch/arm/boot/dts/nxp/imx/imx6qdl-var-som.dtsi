@@ -365,6 +365,7 @@
 		fsl,pins = <
 			/* CTW6120 IRQ */
 			MX6QDL_PAD_EIM_DA7__GPIO3_IO07		0xb0b1
+			MX6QDL_PAD_DISP0_DAT19__GPIO5_IO13	0x1b0b0
 			/* SDMMC2 CD/WP */
 			MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x1b0b0
 			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
@@ -495,6 +496,10 @@
 
 &snvs_poweroff {
 	status = "okay";
+};
+
+&snvs_rtc {
+	status = "disabled";
 };
 
 &ssi2 {

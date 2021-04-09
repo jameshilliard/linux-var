@@ -30,7 +30,6 @@ obj-$(CONFIG_TOUCHSCREEN_CYTTSP_SPI)	+= cyttsp_spi.o
 obj-$(CONFIG_TOUCHSCREEN_CYTTSP4_CORE)	+= cyttsp4_core.o
 obj-$(CONFIG_TOUCHSCREEN_CYTTSP4_I2C)	+= cyttsp4_i2c.o cyttsp_i2c_common.o
 obj-$(CONFIG_TOUCHSCREEN_CYTTSP4_SPI)	+= cyttsp4_spi.o
-obj-$(CONFIG_TOUCHSCREEN_CYTTSP5)	+= cyttsp5.o
 obj-$(CONFIG_TOUCHSCREEN_DA9034)	+= da9034-ts.o
 obj-$(CONFIG_TOUCHSCREEN_DA9052)	+= da9052_tsi.o
 obj-$(CONFIG_TOUCHSCREEN_DYNAPRO)	+= dynapro.o
@@ -117,3 +116,56 @@ obj-$(CONFIG_TOUCHSCREEN_RASPBERRYPI_FW)	+= raspberrypi-ts.o
 obj-$(CONFIG_TOUCHSCREEN_IQS5XX)	+= iqs5xx.o
 obj-$(CONFIG_TOUCHSCREEN_ZINITIX)	+= zinitix.o
 obj-$(CONFIG_TOUCHSCREEN_HIMAX_HX83112B)	+= himax_hx83112b.o
+
+GCOV_PROFILE := y
+
+obj-$(CONFIG_TOUCHSCREEN_PARADE)      += pt.o
+pt-y := pt_core.o pt_mt_common.o pt_platform.o
+pt-$(CONFIG_TOUCHSCREEN_PARADE_MT_A) += pt_mta.o
+pt-$(CONFIG_TOUCHSCREEN_PARADE_MT_B) += pt_mtb.o
+pt-$(CONFIG_TOUCHSCREEN_PARADE_BUTTON) += pt_btn.o
+pt-$(CONFIG_TOUCHSCREEN_PARADE_PROXIMITY) += pt_proximity.o
+obj-$(CONFIG_TOUCHSCREEN_PARADE_DEVICETREE_SUPPORT) += pt_devtree.o
+obj-$(CONFIG_TOUCHSCREEN_PARADE_I2C)  += pt_i2c.o
+obj-$(CONFIG_TOUCHSCREEN_PARADE_SPI)  += pt_spi.o
+obj-$(CONFIG_TOUCHSCREEN_PARADE_DEBUG_MDL)    += pt_debug.o
+obj-$(CONFIG_TOUCHSCREEN_PARADE_LOADER)       += pt_loader.o
+obj-$(CONFIG_TOUCHSCREEN_PARADE_DEVICE_ACCESS)          += pt_device_access.o
+
+CFLAGS_pt_core.o += -DENABLE_WORKAROUND_FOR_GLITCH_AFTER_BL_LAUNCH_APP
+CFLAGS_pt_core.o += -DTTDL_DIAGNOSTICS
+CFLAGS_pt_device_access.o += -DTTDL_DIAGNOSTICS
+CFLAGS_pt_loader.o += -DTTDL_DIAGNOSTICS
+
+
+ifeq ($(CONFIG_TOUCHSCREEN_PARADE_DEBUG),y)
+CFLAGS_pt_core.o += -DDEBUG
+CFLAGS_pt_i2c.o += -DDEBUG
+CFLAGS_pt_spi.o += -DDEBUG
+CFLAGS_pt_mta.o += -DDEBUG
+CFLAGS_pt_mtb.o += -DDEBUG
+CFLAGS_pt_mt_common.o += -DDEBUG
+CFLAGS_pt_btn.o += -DDEBUG
+CFLAGS_pt_proximity.o += -DDEBUG
+CFLAGS_pt_device_access.o += -DDEBUG
+CFLAGS_pt_loader.o += -DDEBUG
+CFLAGS_pt_debug.o += -DDEBUG
+CFLAGS_pt_devtree.o += -DDEBUG
+CFLAGS_pt_platform.o += -DDEBUG
+endif
+
+ifeq ($(CONFIG_TOUCHSCREEN_PARADE_VDEBUG),y)
+CFLAGS_pt_core.o += -DVERBOSE_DEBUG
+CFLAGS_pt_i2c.o += -DVERBOSE_DEBUG
+CFLAGS_pt_spi.o += -DVERBOSE_DEBUG
+CFLAGS_pt_mta.o += -DVERBOSE_DEBUG
+CFLAGS_pt_mtb.o += -DVERBOSE_DEBUG
+CFLAGS_pt_mt_common.o += -DVERBOSE_DEBUG
+CFLAGS_pt_btn.o += -DVERBOSE_DEBUG
+CFLAGS_pt_proximity.o += -DVERBOSE_DEBUG
+CFLAGS_pt_device_access.o += -DVERBOSE_DEBUG
+CFLAGS_pt_loader.o += -DVERBOSE_DEBUG
+CFLAGS_pt_debug.o += -DVERBOSE_DEBUG
+CFLAGS_pt_devtree.o += -DVERBOSE_DEBUG
+CFLAGS_pt_platform.o += -DVERBOSE_DEBUG
+endif

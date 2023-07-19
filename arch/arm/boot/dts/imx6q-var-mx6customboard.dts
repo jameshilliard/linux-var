@@ -32,7 +32,7 @@
 
 	};
 
-	panel {
+	panel-lvds0 {
 		compatible =  "panel-lvds";
 		backlight = <&backlight_lvds>;
 		width-mm = <152>;
@@ -53,8 +53,34 @@
 			};
 
 		port {
-			panel_in: endpoint {
+			panel_in_lvds0: endpoint {
 				remote-endpoint = <&lvds0_out>;
+			};
+		};
+	};
+
+	panel-lvds1 {
+		compatible =  "panel-lvds";
+		width-mm = <152>;
+		height-mm = <91>;
+		label = "etm070001adh6";
+		data-mapping = "jeida-18";
+
+		panel-timing {
+				clock-frequency = <38251000>;
+				hactive = <800>;
+				vactive = <600>;
+				hback-porch = <112>;
+				hfront-porch = <32>;
+				vback-porch = <3>;
+				vfront-porch = <17>;
+				hsync-len = <80>;
+				vsync-len = <4>;
+			};
+
+		port {
+			panel_in_lvds1: endpoint {
+				remote-endpoint = <&lvds1_out>;
 			};
 		};
 	};
@@ -62,17 +88,26 @@
 	backlight_lvds: backlight-lvds {
 		compatible = "pwm-backlight";
 		pwms = <&pwm2 0 50000 0>;
-		brightness-levels = <0 4 8 16 32 64 128 255>;
+		brightness-levels = <0 4 8 16 32 64 128 248>;
 		default-brightness-level = <7>;
 		status = "okay";
 	};
-
 };
 
 &i2c3 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c3_3>;
 	status = "okay";
+
+	touchscreen@24 {
+		compatible = "cypress,tt21000";
+		reg = <0x24>;
+		interrupt-parent = <&gpio3>;
+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+		reset-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
+		touchscreen-size-x = <880>;
+		touchscreen-size-y = <1280>;
+	};
 
 	touchscreen@38 {
 		compatible = "edt,edt-ft5x06";
@@ -234,7 +269,21 @@
 			reg = <4>;
 
 			lvds0_out: endpoint {
-				remote-endpoint = <&panel_in>;
+				remote-endpoint = <&panel_in_lvds0>;
+			};
+		};
+	};
+
+	lvds-channel@1 {
+		fsl,data-mapping = "spwg";
+		fsl,data-width = <24>;
+		status = "okay";
+		primary;
+		port@4 {
+			reg = <4>;
+
+			lvds1_out: endpoint {
+				remote-endpoint = <&panel_in_lvds1>;
 			};
 		};
 	};
